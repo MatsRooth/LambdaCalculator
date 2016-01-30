@@ -1,0 +1,153 @@
+Binary Boolean type raising
+# (c) 2013, 2015, 2016 Mats Rooth.
+# Nov 2015 verified that bugs in inferring types are fixed.
+# Jan 2016 cleanup and example of determiner conjunction.
+
+##################################
+#                                #
+#     Variables and constants    #
+#                                #
+##################################
+
+variables of type e : x y
+constants of type e : m j
+#
+variables of type t : p q
+#
+variables of type <e,t> : P Q
+constants of type <e,t> : sleep yeti god green yawn
+#
+variables of type <e,et> : R
+constants of type <e*e,t> : like admire
+
+##################################
+#                                #
+#      Declare type variables    #
+#                                #
+##################################
+
+# Argument type of a functional conjunct, e for VP conjunction (conjunction of <e,t>).
+variables of type 'a: a
+
+# The first and second functional conjuncts, of type <e,t> for VP conjunction.
+variables of type <'a,'b>: b b'
+
+# The lower conjunction, <t,<t,t>> for <e,t> conjunct
+variables of type <'b,<'b,'b>>: c
+
+# The type variables are used as follows.
+# Binary boolean type raising
+#define B: Lc.Lb.Lb'.La[[c(b(a))](b'(a))]
+#          conjuction
+#             right conjunct
+#                left conjunct
+#                    new argument of the conjoined phrase
+
+multiple letter identifiers
+
+use rule function application
+use rule non-branching nodes
+use rule predicate modification
+use rule lambda abstraction
+
+
+##################################
+#                                #
+#            Lexicon             #
+#                                #
+##################################
+
+# e
+define Mary : m
+define Jehovah : j
+
+
+# et
+define asleep: Lx.sleep(x)
+define yeti: Lx.yeti(x)
+define god: Lx.god(x)
+define green: Lx.green(x)
+define yawned: Lx.yawn(x)
+
+
+# eet
+define admires: LyLx.admire(x,y)
+define likes: LyLx.like(x,y)
+
+# Dummies
+define to: LP.P
+define is: LP.P
+define a: LP.P
+
+# Quantificational determiners
+define some: LPLQ.Ex.[P(x) & Q(x)]
+define every: LPLQ.Ax.[P(x) -> Q(x)]
+
+# Basic conjunctions
+define and: LpLq[q & p]
+# Capital V is join.
+define or: LpLq[q V p]
+
+# Explicit <e,t> conjunction, should be equivalent to [B and]
+define and-et: LPLQLx[P(x) & Q(x)]
+
+# Binary boolean type raising
+# All the variables were defined as polymorphic.
+define B: Lc.Lb.Lb'.La[[c(b(a))](b'(a))]
+
+
+##################################
+#                                #
+#           Examples             #
+#                                #
+##################################
+
+exercise tree
+
+title Sentence conjunction
+directions Jehovah is green and Jehovah is a yeti
+
+[.S [.S Jehovah [.VP [.V is] [.AP [.A green]]]] [.S [.C and] [.S Jehovah [.VP [.V is] [.DP [.D a] [.NP [.N yeti]]]]]]]
+
+title VP conjunction
+directions Raise t conjunction to <e,t> with B. The first version uses a primitive et conjunction, and
+directions the second version a type-raised t conjunction.
+
+[.S Jehovah [.VP [.VP [.V is] [.AP [.A green]]] [.VP and-et [.VP [.V is] [.DP [.D a] [.NP [.N yeti]]]]]]]
+[.S Jehovah [.VP [.VP [.V is] [.AP [.A green]]] [.VP [.C B [.C and]] [.VP [.V is] [.DP [.D a] [.NP [.N yeti]]]]]]]
+
+
+title Conjunction of generalized quantifiers
+directions Raise t conjunction to <<e,t>,t> in one step with B.
+directions [B C] has the same polymorphic type as in the example above.
+directions The calculator infers the type of [[B and] [some god]].
+
+[.S [[every yeti] [[B and] [some god]]] yawned]
+
+
+title Conjunction of transitive verbs
+directions Raise t conjunction to <e,<e,t>. with two B's.
+directions The first version starts with and-et.
+
+[admires [[B and-et] likes]]
+
+[admires [[B [B and]] likes]]
+
+[Mary [[admires [[B [B and]] likes]] Jehovah]]
+
+title Conjunction of transitive verbs
+directions Some things that don't work.
+[admires [[B and] likes]]
+[admires [[[B B] and] likes]]
+
+
+title Conjunction of determiners
+directions sd 
+directions dasf
+
+[[B [B or]] every]
+[some [[B [B or]] every]]
+[[[some [[B [B or]] every]] yeti] [is green]]
+
+
+
